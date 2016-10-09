@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	cargar_departamento();
+	$("#departamento").change(function(){dependencia_provincia();});
+	$("#provincia").change(function(){dependencia_distrito();});
+	$("#distrito").change(function(){dependencia_anexo();});
+	$("#provincia").attr("disabled",true);
+	$("#distrito").attr("disabled",true);
+	$("#anexo").attr("disabled",true);
+});
+
+function cargar_departamento()
+{
+	$.get("scripts/cargar-departamento.php", function(resultado){
+		if(resultado == false)
+		{
+			alert("Error");
+		}
+		else
+		{
+			$('#departamento').append(resultado);			
+		}
+	});	
+}
+function dependencia_provincia()
+{
+	var code = $("#departamento").val();
+	$.get("scripts/dependencia-provincia.php", { code: code },
+		function(resultado)
+		{
+			if(resultado == false)
+			{
+				alert("Error");
+			}
+			else
+			{
+				$("#provincia").attr("disabled",false);
+				document.getElementById("provincia").options.length=1;
+				$('#provincia').append(resultado);			
+			}
+		}
+
+	);
+}
+
+function dependencia_distrito()
+{
+	var code = $("#provincia").val();
+	$.get("scripts/dependencia-distrito.php", { code: code }, function(resultado){
+		if(resultado == false)
+		{
+			alert("Error");
+		}
+		else
+		{
+			$("#distrito").attr("disabled",false);
+			document.getElementById("distrito").options.length=1;
+			$('#distrito').append(resultado);			
+		}
+	});	
+	
+}
+function dependencia_anexo()
+{
+	var code = $("#distrito").val();
+	$.get("scripts/dependencia-anexo.php", { code: code }, function(resultado){
+		if(resultado == false)
+		{
+			alert("Error");
+		}
+		else
+		{
+			$("#anexo").attr("disabled",false);
+			document.getElementById("anexo").options.length=1;
+			$('#anexo').append(resultado);			
+		}
+	});	
+	
+}
+
+</script>
+<style type="text/css">
+dt{font-size:200%;}
+dd{font-size:150%;}
+</style>
+<title>Combobox dependientes de Departamento, provincia, distrito y Anexo con PHP, MySQL, jQuery y un poco de AJAX</title>
+</head>
+
+<body>
+<h1>Combobox dependientes de Departamento, provincia, distrito y Anexo con PHP, MySQL, jQuery y un poco de AJAX</h1>
+<h1>PRUEBA DEL USO GITHUB - GIT</h1>
+
+<dl>
+<dt>Ubicaci&oacute;n:</dt>
+	<dd>departamento:</dd>
+    <dd>
+        <select id="departamento" name="departamento">
+            <option value="0">Selecciona Uno...</option>
+        </select>
+    </dd>
+
+	<dd>provincia:</dd>
+    <dd>
+        <select id="provincia" name="provincia">
+            <option value="0">Selecciona Uno...</option>
+        </select>
+    </dd>
+
+	<dd>distrito:</dd>
+    <dd>
+        <select id="distrito" name="distrito">
+            <option value="0">Selecciona Uno...</option>
+        </select>
+    </dd>
+	<dd>anexo:</dd>
+    <dd>
+        <select id="anexo" name="anexo">
+            <option value="0">Selecciona Uno...</option>
+        </select>
+    </dd>
+</dl>
+</body>
+</html>
